@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CACIK'SHABER | Sosyal Medya Haber Üssü</title>
     
-    <!-- ResizeObserver hatalarını en erken aşamada yakalamak için script en üstte -->
+    <!-- ResizeObserver Hata Bastırıcı -->
     <script>
         (function() {
             const hideResizeError = (e) => {
@@ -44,16 +44,55 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
+        /* --- INTRO ANIMASYONU --- */
+        #intro-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+        .intro-content { text-align: center; }
+        .intro-content h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 8vw, 4rem);
+            font-weight: 900;
+            color: white;
+            letter-spacing: -2px;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: introPop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .intro-content h1 span { color: var(--primary); }
+        .intro-content p {
+            color: var(--success);
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeIn 0.5s 0.8s forwards;
+        }
+        @keyframes introPop {
+            0% { opacity: 0; transform: scale(0.8); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .intro-hidden { opacity: 0 !important; visibility: hidden !important; }
+
         /* Navigasyon */
         nav { background: #000; padding: 15px 0; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
         .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
         
         .brand-wrapper { display: flex; flex-direction: column; }
-        .brand { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--text); text-decoration: none; line-height: 1; }
+        .brand { font-family: 'Outfit', sans-serif; font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 900; color: var(--text); text-decoration: none; line-height: 1; }
         .brand span { color: var(--primary); }
 
         .author-tag { 
-            font-size: 0.75rem; font-weight: 900; letter-spacing: 1.5px; margin-top: 5px; text-transform: lowercase;
+            font-size: 0.7rem; font-weight: 900; letter-spacing: 1.5px; margin-top: 5px; text-transform: lowercase;
             background: linear-gradient(to right, #1a4d2e 0%, #3fb950 25%, #a2f01f 50%, #3fb950 75%, #1a4d2e 100%);
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: flowRight 2s linear infinite; display: inline-block;
@@ -72,102 +111,111 @@
         .marquee-content {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 25s linear infinite;
+            animation: marquee 30s linear infinite;
             font-family: 'Outfit', sans-serif;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text);
             letter-spacing: 1px;
         }
         .marquee-content span { color: var(--primary); }
         .marquee-content .highlight { color: var(--success); }
 
-        @keyframes marquee {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
-        }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* Kaynak Seçici */
-        .source-selector { display: flex; gap: 10px; max-width: 1400px; margin: 15px auto; padding: 0 10px; overflow-x: auto; scrollbar-width: none; position: relative; z-index: 1100; }
+        /* Kaynak Seçici (Responsive Geliştirme) */
+        .source-selector { 
+            display: flex; gap: 10px; max-width: 1400px; margin: 15px auto; padding: 0 15px; 
+            overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+            position: relative; z-index: 1100; 
+        }
         .source-selector::-webkit-scrollbar { display: none; }
         
         .source-btn { 
             background: var(--card-bg); border: 1px solid var(--border); color: var(--text-dim); 
-            padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 700; 
-            transition: 0.3s; white-space: nowrap; display: flex; align-items: center; gap: 8px; font-size: 0.85rem;
+            padding: 12px 24px; border-radius: 30px; cursor: pointer; font-weight: 700; 
+            transition: 0.3s; white-space: nowrap; display: flex; align-items: center; gap: 8px; font-size: 0.8rem;
+            flex-shrink: 0;
         }
         .source-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 0 15px rgba(237, 28, 36, 0.3); }
 
         /* İçerik Alanı */
-        .content-container { max-width: 1400px; margin: 0 auto; padding: 0 20px 50px; position: relative; min-height: 800px; }
-        .feed-section { position: absolute; top: 0; left: 0; width: 100%; visibility: hidden; opacity: 0; height: 0; overflow: hidden; transition: opacity 0.3s ease; z-index: 1; }
+        .content-container { max-width: 1400px; margin: 0 auto; padding: 0 15px 50px; position: relative; min-height: 600px; }
+        .feed-section { position: absolute; top: 0; left: 0; width: 100%; visibility: hidden; opacity: 0; height: 0; overflow: hidden; transition: opacity 0.4s ease; z-index: 1; }
         .feed-section.active { position: relative; visibility: visible; opacity: 1; height: auto; overflow: visible; z-index: 10; }
-        .widget-box { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); min-height: 80vh; overflow: hidden; position: relative; }
+        .widget-box { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); min-height: 70vh; overflow: hidden; position: relative; }
 
         /* --- EKİP & SOSYAL TASARIMI --- */
-        .team-grid { padding: 40px; display: flex; flex-direction: column; gap: 50px; }
+        .team-grid { padding: clamp(20px, 5vw, 40px); display: flex; flex-direction: column; gap: 50px; }
         .team-category { display: flex; flex-direction: column; gap: 20px; }
         
         .team-category h2 { 
-            font-family: 'Outfit', sans-serif; color: var(--success); font-size: 1.5rem; 
+            font-family: 'Outfit', sans-serif; color: var(--success); font-size: clamp(1.2rem, 3vw, 1.5rem); 
             border-left: 4px solid var(--success); padding-left: 15px;
             opacity: 0; transform: translateX(-20px);
         }
         .active .team-category h2 { animation: slideInLeft 0.5s forwards; }
 
-        .cards-wrapper { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .cards-wrapper { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
         
         .member-card { 
             background: rgba(22, 27, 34, 0.8); border: 1px solid var(--border); border-radius: 20px; padding: 25px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 15px;
             opacity: 0; transform: translateY(30px);
-            position: relative;
-            z-index: 20;
+            position: relative; z-index: 20;
         }
 
         .active .member-card { animation: cardAppear 0.6s forwards; }
-        .active .member-card:nth-child(1) { animation-delay: 0.1s; }
-        .active .member-card:nth-child(2) { animation-delay: 0.2s; }
-        .active .member-card:nth-child(3) { animation-delay: 0.3s; }
-
+        
         .member-card:hover { 
-            border-color: var(--success); 
-            transform: translateY(-10px) scale(1.02); 
-            box-shadow: 0 15px 30px rgba(63, 185, 80, 0.2); 
-            background: rgba(22, 27, 34, 1);
+            border-color: var(--success); transform: translateY(-8px); 
+            box-shadow: 0 15px 30px rgba(63, 185, 80, 0.2); background: rgba(22, 27, 34, 1);
         }
         
-        .member-info h3 { font-size: 1.3rem; margin-bottom: 5px; font-family: 'Outfit', sans-serif; }
-        .member-info p { color: var(--text-dim); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .member-info h3 { font-size: 1.2rem; margin-bottom: 5px; font-family: 'Outfit', sans-serif; }
+        .member-info p { color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
 
         .social-links { display: flex; gap: 12px; margin-top: 10px; position: relative; z-index: 50; }
         .social-link { 
-            width: 45px; height: 45px; border-radius: 12px; display: flex !important; align-items: center; justify-content: center;
-            text-decoration: none; color: white; font-size: 1.3rem; transition: 0.3s; background: #1c2128;
+            width: 42px; height: 42px; border-radius: 12px; display: flex !important; align-items: center; justify-content: center;
+            text-decoration: none; color: white; font-size: 1.2rem; transition: 0.3s; background: #1c2128;
             cursor: pointer; pointer-events: auto !important;
-            border: 1px solid transparent;
         }
         .social-link i { pointer-events: none; }
-
         .social-link:hover { transform: rotate(10deg) scale(1.1); }
-        .social-link.insta:hover { background: var(--instagram); border-color: #ff85a1; box-shadow: 0 5px 15px rgba(225, 48, 108, 0.4); }
-        .social-link.yt:hover { background: var(--youtube); border-color: #ff4d4d; box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4); }
-        .social-link.kick:hover { background: var(--kick); color: black; border-color: #fff; box-shadow: 0 5px 15px rgba(83, 252, 24, 0.4); }
+        .social-link.insta:hover { background: var(--instagram); }
+        .social-link.yt:hover { background: var(--youtube); }
+        .social-link.kick:hover { background: var(--kick); color: black; }
+
+        /* Form */
+        .feedback-container { max-width: 600px; margin: 30px auto; padding: 20px; }
+        .feedback-form { display: flex; flex-direction: column; gap: 15px; }
+        .feedback-form input, .feedback-form textarea { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; padding: 15px; color: white; width: 100%; outline: none; }
+        .submit-btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.3s; }
 
         @keyframes cardAppear { to { opacity: 1; transform: translateY(0); } }
         @keyframes slideInLeft { to { opacity: 1; transform: translateX(0); } }
 
-        /* Form */
-        .feedback-container { max-width: 600px; margin: 50px auto; padding: 40px; }
-        .feedback-form { display: flex; flex-direction: column; gap: 15px; }
-        .feedback-form input, .feedback-form textarea { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; padding: 15px; color: white; width: 100%; outline: none; }
-        .submit-btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.3s; }
-        .submit-btn:hover { filter: brightness(1.2); }
+        /* Mobil Düzenlemeler */
+        @media (max-width: 600px) {
+            .nav-container { flex-direction: column; gap: 10px; text-align: center; }
+            .team-grid { padding: 15px; }
+            .source-selector { margin-top: 10px; }
+            .widget-box { min-height: 80vh; }
+        }
 
         rssapp-wall { pointer-events: auto !important; }
     </style>
 </head>
 <body>
+
+    <!-- CACIK'S MEDYA INTRO -->
+    <div id="intro-overlay">
+        <div class="intro-content">
+            <h1>CACIK'S <span>MEDYA</span></h1>
+            <p>HABER ÜSSÜNE HOŞ GELDİNİZ</p>
+        </div>
+    </div>
 
     <nav>
         <div class="nav-container">
@@ -181,7 +229,6 @@
         </div>
     </nav>
 
-    <!-- Kayan Duyuru Bandı -->
     <div class="marquee-container">
         <div class="marquee-content">
             ABONE OLMAYI & TAKİP ETMEYİ UNUTMAYIN <span>"Pilot"</span> - Daha fazla haber için <span class="highlight">geri bildirimde bulununuz.</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ABONE OLMAYI & TAKİP ETMEYİ UNUTMAYIN <span>"Pilot"</span> - Daha fazla haber için <span class="highlight">geri bildirimde bulununuz.</span>
@@ -199,11 +246,11 @@
     </div>
 
     <div class="content-container">
-        <!-- Haber Kaynakları -->
-        <div id="feed-gusholder" class="feed-section active"><div class="widget-box"><rssapp-wall id="udj5TClSat8GAlF4"></rssapp-wall></div></div>
-        <div id="feed-bpt" class="feed-section"><div class="widget-box"><rssapp-wall id="B679wdSXeWOPEE1b"></rssapp-wall></div></div>
-        <div id="feed-pusholder" class="feed-section"><div class="widget-box"><rssapp-wall id="gkNnXHjQ60c6CE2I"></rssapp-wall></div></div>
-        <div id="feed-sanahaber" class="feed-section"><div class="widget-box"><rssapp-wall id="YSZNQfF91xgqmdSB"></rssapp-wall></div></div>
+        <!-- Haber Kaynakları (Lazy Load İçin Boş Kapsayıcılar) -->
+        <div id="feed-gusholder" class="feed-section active" data-widget-id="udj5TClSat8GAlF4"><div class="widget-box"></div></div>
+        <div id="feed-bpt" class="feed-section" data-widget-id="B679wdSXeWOPEE1b"><div class="widget-box"></div></div>
+        <div id="feed-pusholder" class="feed-section" data-widget-id="gkNnXHjQ60c6CE2I"><div class="widget-box"></div></div>
+        <div id="feed-sanahaber" class="feed-section" data-widget-id="YSZNQfF91xgqmdSB"><div class="widget-box"></div></div>
         <div id="feed-bosunatiklama" class="feed-section"><div class="widget-box" style="text-align:center; padding:100px;"><h1>boşa tıklama demiştim :)</h1></div></div>
 
         <!-- Geri Bildirim -->
@@ -240,17 +287,10 @@
                                     <a href="https://www.youtube.com/@icicemedya" target="_blank" class="social-link yt"><i class="fa-brands fa-youtube"></i></a>
                                 </div>
                             </div>
-                            <div class="member-card">
-                                <div class="member-info"><h3>Esas Futbol</h3><p>Spor Kanalları</p></div>
-                                <div class="social-links">
-                                    <a href="https://www.youtube.com/@EsasFutbol" target="_blank" class="social-link yt"><i class="fa-brands fa-youtube"></i></a>
-                                </div>
-                            </div>
                         </div>
                     </div>
-
                     <div class="team-category">
-                        <h2>Yapımcı & Moderatör</h2>
+                        <h2>Yapımcı</h2>
                         <div class="cards-wrapper">
                             <div class="member-card">
                                 <div class="member-info"><h3>Gökberk Uçar</h3><p>Yapımcı & Admin</p></div>
@@ -260,45 +300,48 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="team-category">
-                        <h2>Moderatörler</h2>
-                        <div class="cards-wrapper">
-                            <div class="member-card">
-                                <div class="member-info"><h3>Yiğit Ali</h3><p>Moderatör</p></div>
-                                <div class="social-links">
-                                    <a href="https://www.instagram.com/yigitalispn/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
-                                </div>
-                            </div>
-                            <div class="member-card">
-                                <div class="member-info"><h3>İlker</h3><p>Moderatör</p></div>
-                                <div class="social-links">
-                                    <a href="https://www.instagram.com/ilkeryzx/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
-                                </div>
-                            </div>
-                            <div class="member-card">
-                                <div class="member-info"><h3>Hamza</h3><p>Moderatör</p></div>
-                                <div class="social-links">
-                                    <a href="https://www.instagram.com/hamzaabilge/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://widget.rss.app/v1/wall.js" type="text/javascript"></script>
+    <!-- RSS Script (Değişkeni yüklemek için bir kere çağırıyoruz) -->
+    <script src="https://widget.rss.app/v1/wall.js" type="text/javascript" async></script>
+    
     <script>
-        let resizeTimeout;
-        
+        // --- INTRO KAPATMA ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const intro = document.getElementById('intro-overlay');
+                intro.classList.add('intro-hidden');
+                // İlk widget'ı yükle
+                lazyLoadWidget('gusholder');
+            }, 2500);
+        });
+
+        // --- LAZY LOAD MANTIĞI ---
+        const loadedWidgets = new Set();
+
+        function lazyLoadWidget(sourceId) {
+            const section = document.getElementById('feed-' + sourceId);
+            const widgetId = section.getAttribute('data-widget-id');
+            const widgetBox = section.querySelector('.widget-box');
+
+            if (widgetId && !loadedWidgets.has(widgetId)) {
+                widgetBox.innerHTML = `<rssapp-wall id="${widgetId}"></rssapp-wall>`;
+                loadedWidgets.add(widgetId);
+                
+                // RSS script'inin yeni eklenen elementi fark etmesini sağlar
+                if (window.RSSApp) {
+                    window.RSSApp.init();
+                }
+            }
+        }
+
         function showSource(sourceId, btn) {
-            // Buton aktiflik durumu
             document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
-            // Bölüm değiştirme
             document.querySelectorAll('.feed-section').forEach(s => {
                 s.classList.remove('active');
             });
@@ -306,29 +349,17 @@
             const targetSection = document.getElementById('feed-' + sourceId);
             if (targetSection) {
                 targetSection.classList.add('active');
+                lazyLoadWidget(sourceId); // Widget'ı sadece ihtiyaç olduğunda yükle
                 
-                // Yukarı kaydır
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
-                /**
-                 * Debounced resize olayı. RSS widgetlarının çakışmasını önler.
-                 */
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    requestAnimationFrame(() => {
-                        try {
-                            window.dispatchEvent(new Event('resize'));
-                        } catch (e) {
-                            // Hata oluşursa sessizce yoksay
-                        }
-                    });
-                }, 150);
+                requestAnimationFrame(() => {
+                    setTimeout(() => { 
+                        window.dispatchEvent(new Event('resize')); 
+                    }, 100);
+                });
             }
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log("Cacık's Haber Başarıyla Yüklendi.");
-        });
     </script>
 </body>
 </html>

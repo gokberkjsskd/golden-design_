@@ -58,7 +58,7 @@
         .intro-content { text-align: center; }
         .intro-content h1 {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(2rem, 8vw, 4rem);
+            font-size: clamp(2.5rem, 10vw, 5rem);
             font-weight: 900;
             color: white;
             letter-spacing: -2px;
@@ -123,7 +123,7 @@
 
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* Kaynak Seçici (Responsive Geliştirme) */
+        /* Kaynak Seçici */
         .source-selector { 
             display: flex; gap: 10px; max-width: 1400px; margin: 15px auto; padding: 0 15px; 
             overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
@@ -146,7 +146,7 @@
         .widget-box { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); min-height: 70vh; overflow: hidden; position: relative; }
 
         /* --- EKİP & SOSYAL TASARIMI --- */
-        .team-grid { padding: clamp(20px, 5vw, 40px); display: flex; flex-direction: column; gap: 50px; }
+        .team-grid { padding: clamp(20px, 5vw, 40px); display: flex; flex-direction: column; gap: 40px; }
         .team-category { display: flex; flex-direction: column; gap: 20px; }
         
         .team-category h2 { 
@@ -246,7 +246,7 @@
     </div>
 
     <div class="content-container">
-        <!-- Haber Kaynakları (Lazy Load İçin Boş Kapsayıcılar) -->
+        <!-- Haber Kaynakları -->
         <div id="feed-gusholder" class="feed-section active" data-widget-id="udj5TClSat8GAlF4"><div class="widget-box"></div></div>
         <div id="feed-bpt" class="feed-section" data-widget-id="B679wdSXeWOPEE1b"><div class="widget-box"></div></div>
         <div id="feed-pusholder" class="feed-section" data-widget-id="gkNnXHjQ60c6CE2I"><div class="widget-box"></div></div>
@@ -270,8 +270,9 @@
         <div id="feed-team" class="feed-section">
             <div class="widget-box">
                 <div class="team-grid">
+                    
                     <div class="team-category">
-                        <h2>Yayıncımız</h2>
+                        <h2>Yayıncılar & Medya</h2>
                         <div class="cards-wrapper">
                             <div class="member-card">
                                 <div class="member-info"><h3>Pilot Berk</h3><p>Ana Yayıncı</p></div>
@@ -287,8 +288,15 @@
                                     <a href="https://www.youtube.com/@icicemedya" target="_blank" class="social-link yt"><i class="fa-brands fa-youtube"></i></a>
                                 </div>
                             </div>
+                            <div class="member-card">
+                                <div class="member-info"><h3>Esas Futbol</h3><p>Spor Kanalları</p></div>
+                                <div class="social-links">
+                                    <a href="https://www.youtube.com/@EsasFutbol" target="_blank" class="social-link yt"><i class="fa-brands fa-youtube"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                     <div class="team-category">
                         <h2>Yapımcı</h2>
                         <div class="cards-wrapper">
@@ -300,12 +308,37 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="team-category">
+                        <h2>Moderatörler</h2>
+                        <div class="cards-wrapper">
+                            <div class="member-card">
+                                <div class="member-info"><h3>Yiğit Ali</h3><p>Moderatör</p></div>
+                                <div class="social-links">
+                                    <a href="https://www.instagram.com/yigitalispn/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="member-card">
+                                <div class="member-info"><h3>İlker</h3><p>Moderatör</p></div>
+                                <div class="social-links">
+                                    <a href="https://www.instagram.com/ilkeryzx/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="member-card">
+                                <div class="member-info"><h3>Hamza</h3><p>Moderatör</p></div>
+                                <div class="social-links">
+                                    <a href="https://www.instagram.com/hamzaabilge/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- RSS Script (Değişkeni yüklemek için bir kere çağırıyoruz) -->
+    <!-- RSS Script -->
     <script src="https://widget.rss.app/v1/wall.js" type="text/javascript" async></script>
     
     <script>
@@ -314,7 +347,6 @@
             setTimeout(() => {
                 const intro = document.getElementById('intro-overlay');
                 intro.classList.add('intro-hidden');
-                // İlk widget'ı yükle
                 lazyLoadWidget('gusholder');
             }, 2500);
         });
@@ -324,6 +356,7 @@
 
         function lazyLoadWidget(sourceId) {
             const section = document.getElementById('feed-' + sourceId);
+            if (!section) return;
             const widgetId = section.getAttribute('data-widget-id');
             const widgetBox = section.querySelector('.widget-box');
 
@@ -331,7 +364,6 @@
                 widgetBox.innerHTML = `<rssapp-wall id="${widgetId}"></rssapp-wall>`;
                 loadedWidgets.add(widgetId);
                 
-                // RSS script'inin yeni eklenen elementi fark etmesini sağlar
                 if (window.RSSApp) {
                     window.RSSApp.init();
                 }
@@ -349,7 +381,7 @@
             const targetSection = document.getElementById('feed-' + sourceId);
             if (targetSection) {
                 targetSection.classList.add('active');
-                lazyLoadWidget(sourceId); // Widget'ı sadece ihtiyaç olduğunda yükle
+                lazyLoadWidget(sourceId);
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 

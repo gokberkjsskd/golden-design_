@@ -43,76 +43,165 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* Intro Ayarları */
+        /* --- INTRO ANIMASYONU --- */
         #intro-overlay {
-            position: fixed; inset: 0; background: #000; z-index: 10000;
-            display: flex; align-items: center; justify-content: center;
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: opacity 0.8s ease-out, visibility 0.8s;
         }
         .intro-content { text-align: center; }
-        .intro-content h1 { font-family: 'Outfit', sans-serif; font-size: clamp(2.5rem, 10vw, 5rem); font-weight: 900; color: white; animation: introPop 1.2s forwards; }
+        .intro-content h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 900;
+            color: white;
+            letter-spacing: -2px;
+            opacity: 0;
+            transform: scale(0.8);
+            animation: introPop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
         .intro-content h1 span { color: var(--primary); }
-        .intro-hidden { opacity: 0 !important; visibility: hidden !important; pointer-events: none; }
-        @keyframes introPop { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+        .intro-content p {
+            color: var(--success);
+            font-weight: 800;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            margin-top: 10px;
+            opacity: 0;
+            animation: fadeIn 0.5s 0.8s forwards;
+        }
+        @keyframes introPop {
+            0% { opacity: 0; transform: scale(0.8); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .intro-hidden { opacity: 0 !important; visibility: hidden !important; }
 
-        /* Nav & Marquee */
+        /* Navigasyon */
         nav { background: #000; padding: 15px 0; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; }
         .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
-        .brand { font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 900; color: #fff; text-decoration: none; }
-        .brand span { color: var(--primary); }
-        .author-tag { font-size: 0.7rem; font-weight: 900; background: linear-gradient(to right, #3fb950, #a2f01f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: flow 2s linear infinite; }
-        @keyframes flow { to { background-position: 200% center; } }
-
-        .marquee-container { background: #1a1d23; border-bottom: 1px solid var(--border); padding: 10px 0; overflow: hidden; white-space: nowrap; }
-        .marquee-content { display: inline-block; animation: marquee 30s linear infinite; font-weight: 700; color: #fff; }
-        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        /* Seçici Butonlar */
-        .source-selector { display: flex; gap: 10px; max-width: 1400px; margin: 15px auto; padding: 0 15px; overflow-x: auto; position: relative; z-index: 1100; }
-        .source-btn { background: var(--card-bg); border: 1px solid var(--border); color: var(--text-dim); padding: 12px 24px; border-radius: 30px; cursor: pointer; font-weight: 700; white-space: nowrap; }
-        .source-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        /* İçerik ve Katman Fix */
-        .content-container { max-width: 1400px; margin: 0 auto; padding: 0 15px 50px; position: relative; }
-        .feed-section { position: absolute; top: 0; left: 0; width: 100%; visibility: hidden; opacity: 0; pointer-events: none; z-index: 1; }
-        .feed-section.active { position: relative; visibility: visible; opacity: 1; pointer-events: auto; z-index: 50; }
-        .widget-box { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); min-height: 70vh; overflow: hidden; }
-
-        /* Ekip Kartları - Tıklama Odaklı */
-        .team-grid { padding: 40px; display: flex; flex-direction: column; gap: 40px; }
-        .cards-wrapper { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        .member-card { background: #1c2128; border: 1px solid var(--border); border-radius: 20px; padding: 25px; transition: 0.3s; position: relative; }
-        .member-card:hover { border-color: var(--success); transform: translateY(-5px); }
         
-        /* SOSYAL LİNK KESİN ÇÖZÜM */
-        .social-links { 
-            display: flex !important; 
-            gap: 15px !important; 
-            margin-top: 15px !important; 
-            position: relative !important; 
-            z-index: 9999 !important; /* En üst katman */
-        }
-        .social-link { 
-            width: 45px !important; 
-            height: 45px !important; 
-            background: #2d333b !important; 
-            border-radius: 12px !important; 
-            display: flex !important; 
-            align-items: center !important; 
-            justify-content: center !important; 
-            color: white !important; 
-            text-decoration: none !important; 
-            font-size: 1.4rem !important;
-            transition: 0.3s !important;
-            cursor: pointer !important;
-            pointer-events: auto !important; /* Tıklamayı zorla */
-        }
-        .social-link:hover { transform: scale(1.1); background: var(--primary) !important; }
-        .social-link.insta:hover { background: var(--instagram) !important; }
-        .social-link.yt:hover { background: var(--youtube) !important; }
-        .social-link.kick:hover { background: var(--kick) !important; color: black !important; }
+        .brand-wrapper { display: flex; flex-direction: column; }
+        .brand { font-family: 'Outfit', sans-serif; font-size: clamp(1.2rem, 4vw, 1.8rem); font-weight: 900; color: var(--text); text-decoration: none; line-height: 1; }
+        .brand span { color: var(--primary); }
 
-        @media (max-width: 600px) { .nav-container { flex-direction: column; } }
+        .author-tag { 
+            font-size: 0.7rem; font-weight: 900; letter-spacing: 1.5px; margin-top: 5px; text-transform: lowercase;
+            background: linear-gradient(to right, #1a4d2e 0%, #3fb950 25%, #a2f01f 50%, #3fb950 75%, #1a4d2e 100%);
+            background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: flowRight 2s linear infinite; display: inline-block;
+        }
+        @keyframes flowRight { 0% { background-position: 0% center; } 100% { background-position: -200% center; } }
+
+        /* Kayan Yazı Bandı */
+        .marquee-container {
+            background: #1a1d23;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 30s linear infinite;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+        .marquee-content span { color: var(--primary); }
+        .marquee-content .highlight { color: var(--success); }
+
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+        /* Kaynak Seçici */
+        .source-selector { 
+            display: flex; gap: 10px; max-width: 1400px; margin: 15px auto; padding: 0 15px; 
+            overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+            position: relative; z-index: 1100; 
+        }
+        .source-selector::-webkit-scrollbar { display: none; }
+        
+        .source-btn { 
+            background: var(--card-bg); border: 1px solid var(--border); color: var(--text-dim); 
+            padding: 12px 24px; border-radius: 30px; cursor: pointer; font-weight: 700; 
+            transition: 0.3s; white-space: nowrap; display: flex; align-items: center; gap: 8px; font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .source-btn.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 0 15px rgba(237, 28, 36, 0.3); }
+
+        /* İçerik Alanı */
+        .content-container { max-width: 1400px; margin: 0 auto; padding: 0 15px 50px; position: relative; min-height: 600px; }
+        .feed-section { position: absolute; top: 0; left: 0; width: 100%; visibility: hidden; opacity: 0; height: 0; overflow: hidden; transition: opacity 0.4s ease; z-index: 1; }
+        .feed-section.active { position: relative; visibility: visible; opacity: 1; height: auto; overflow: visible; z-index: 10; }
+        .widget-box { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); min-height: 70vh; overflow: hidden; position: relative; }
+
+        /* --- EKİP & SOSYAL TASARIMI --- */
+        .team-grid { padding: clamp(20px, 5vw, 40px); display: flex; flex-direction: column; gap: 40px; }
+        .team-category { display: flex; flex-direction: column; gap: 20px; }
+        
+        .team-category h2 { 
+            font-family: 'Outfit', sans-serif; color: var(--success); font-size: clamp(1.2rem, 3vw, 1.5rem); 
+            border-left: 4px solid var(--success); padding-left: 15px;
+            opacity: 0; transform: translateX(-20px);
+        }
+        .active .team-category h2 { animation: slideInLeft 0.5s forwards; }
+
+        .cards-wrapper { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        
+        .member-card { 
+            background: rgba(22, 27, 34, 0.8); border: 1px solid var(--border); border-radius: 20px; padding: 25px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; gap: 15px;
+            opacity: 0; transform: translateY(30px);
+            position: relative; z-index: 50; /* Kart z-index artırıldı */
+        }
+
+        .active .member-card { animation: cardAppear 0.6s forwards; }
+        
+        .member-card:hover { 
+            border-color: var(--success); transform: translateY(-8px); 
+            box-shadow: 0 15px 30px rgba(63, 185, 80, 0.2); background: rgba(22, 27, 34, 1);
+        }
+        
+        .member-info h3 { font-size: 1.2rem; margin-bottom: 5px; font-family: 'Outfit', sans-serif; }
+        .member-info p { color: var(--text-dim); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        .social-links { display: flex; gap: 12px; margin-top: 10px; position: relative; z-index: 100; /* Link z-index en tepeye alındı */ }
+        .social-link { 
+            width: 42px; height: 42px; border-radius: 12px; display: flex !important; align-items: center; justify-content: center;
+            text-decoration: none; color: white; font-size: 1.2rem; transition: 0.3s; background: #1c2128;
+            cursor: pointer; pointer-events: auto !important;
+        }
+        .social-link i { pointer-events: none; }
+        .social-link:hover { transform: rotate(10deg) scale(1.1); }
+        .social-link.insta:hover { background: var(--instagram); }
+        .social-link.yt:hover { background: var(--youtube); }
+        .social-link.kick:hover { background: var(--kick); color: black; }
+
+        @keyframes cardAppear { to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft { to { opacity: 1; transform: translateX(0); } }
+
+        .feedback-container { max-width: 600px; margin: 30px auto; padding: 20px; }
+        .feedback-form { display: flex; flex-direction: column; gap: 15px; }
+        .feedback-form input, .feedback-form textarea { background: #0d1117; border: 1px solid var(--border); border-radius: 12px; padding: 15px; color: white; width: 100%; outline: none; }
+        .submit-btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 900; cursor: pointer; transition: 0.3s; }
+
+        @media (max-width: 600px) {
+            .nav-container { flex-direction: column; gap: 10px; text-align: center; }
+            .team-grid { padding: 15px; }
+            .source-selector { margin-top: 10px; }
+            .widget-box { min-height: 80vh; }
+        }
+
+        rssapp-wall { pointer-events: auto !important; }
     </style>
 </head>
 <body>
@@ -120,7 +209,7 @@
     <div id="intro-overlay">
         <div class="intro-content">
             <h1>CACIK'S <span>MEDYA</span></h1>
-            <p style="color:var(--success); font-weight:800; letter-spacing:2px;">HABER ÜSSÜNE HOŞ GELDİNİZ</p>
+            <p>HABER ÜSSÜNE HOŞ GELDİNİZ</p>
         </div>
     </div>
 
@@ -130,12 +219,15 @@
                 <a href="#" class="brand">CACIK'S<span>HABER</span></a>
                 <span class="author-tag">by gokberk_trn</span>
             </div>
+            <div style="font-size: 0.7rem; color: #3fb950; font-weight: 800; text-align: right;">
+                <i class="fa-solid fa-circle-dot"></i> CANLI AKIŞ
+            </div>
         </div>
     </nav>
 
     <div class="marquee-container">
         <div class="marquee-content">
-            ABONE OLMAYI & TAKİP ETMEYİ UNUTMAYIN <span>"Pilot"</span> - Daha fazla haber için geri bildirimde bulununuz. &nbsp;&nbsp;&nbsp;
+            ABONE OLMAYI & TAKİP ETMEYİ UNUTMAYIN <span>"Pilot"</span> - Daha fazla haber için <span class="highlight">geri bildirimde bulununuz.</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ABONE OLMAYI & TAKİP ETMEYİ UNUTMAYIN <span>"Pilot"</span> - Daha fazla haber için <span class="highlight">geri bildirimde bulununuz.</span>
         </div>
     </div>
 
@@ -145,8 +237,8 @@
         <button class="source-btn" onclick="showSource('pusholder', this)">PUSHOLDER</button>
         <button class="source-btn" onclick="showSource('sanahaber', this)">SANA HABER</button>
         <button class="source-btn" onclick="showSource('bosunatiklama', this)">BOŞUNA TIKLAMA</button>
-        <button class="source-btn" onclick="showSource('feedback', this)" style="color:var(--success)">GERİ BİLDİRİM</button>
-        <button class="source-btn" onclick="showSource('team', this)" style="color:#0088cc">EKİP / SOSYAL</button>
+        <button class="source-btn" onclick="showSource('feedback', this)" style="border-color: var(--success); color: var(--success);">GERİ BİLDİRİM</button>
+        <button class="source-btn" onclick="showSource('team', this)" style="border-color: #0088cc; color: #0088cc;">EKİP / SOSYAL</button>
     </div>
 
     <div class="content-container">
@@ -158,11 +250,11 @@
 
         <div id="feed-feedback" class="feed-section">
             <div class="widget-box">
-                <div style="max-width:500px; margin:50px auto; padding:20px;">
-                    <form action="https://formspree.io/f/mlggrgln" method="POST" style="display:flex; flex-direction:column; gap:15px;">
-                        <input type="email" name="email" placeholder="E-posta" style="padding:15px; border-radius:10px; background:#0d1117; color:white; border:1px solid #30363d;" required>
-                        <textarea name="message" placeholder="Mesajınız" style="padding:15px; border-radius:10px; background:#0d1117; color:white; border:1px solid #30363d; height:150px;" required></textarea>
-                        <button type="submit" style="background:var(--primary); color:white; padding:15px; border:none; border-radius:10px; font-weight:900; cursor:pointer;">MESAJI GÖNDER</button>
+                <div class="feedback-container">
+                    <form action="https://formspree.io/f/mlggrgln" method="POST" class="feedback-form">
+                        <input type="email" name="email" placeholder="E-posta Adresiniz" required>
+                        <textarea name="message" placeholder="Mesajınız" required></textarea>
+                        <button type="submit" class="submit-btn">MESAJI GÖNDER</button>
                     </form>
                 </div>
             </div>
@@ -173,39 +265,63 @@
                 <div class="team-grid">
                     
                     <div class="team-category">
-                        <h2 style="color:var(--success); border-left:4px solid var(--success); padding-left:15px; margin-bottom:20px;">Yayıncılar & Medya</h2>
+                        <h2>Yayıncılar & Medya</h2>
                         <div class="cards-wrapper">
                             <div class="member-card">
-                                <h3>Pilot Berk</h3><p style="color:var(--text-dim); font-size:0.8rem;">Ana Yayıncı</p>
+                                <div class="member-info"><h3>Pilot Berk</h3><p>Ana Yayıncı</p></div>
                                 <div class="social-links">
-                                    <a href="https://www.instagram.com/pilotberk/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
-                                    <a href="https://kick.com/pilotberkk" target="_blank" class="social-link kick"><i class="fa-brands fa-kickstarter"></i></a>
+                                    <a href="https://www.instagram.com/pilotberk/" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                    <a href="https://kick.com/pilotberkk" class="social-link kick"><i class="fa-brands fa-kickstarter"></i></a>
                                 </div>
                             </div>
                             <div class="member-card">
-                                <h3>İçiçe Medya</h3><p style="color:var(--text-dim); font-size:0.8rem;">Prodüksiyon</p>
+                                <div class="member-info"><h3>İçiçe Medya</h3><p>Medya & Prodüksiyon</p></div>
                                 <div class="social-links">
-                                    <a href="https://www.instagram.com/icicemedya" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
-                                    <a href="https://www.youtube.com/@icicemedya" target="_blank" class="social-link yt"><i class="fa-brands fa-youtube"></i></a>
+                                    <a href="https://www.instagram.com/icicemedya" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                    <a href="https://www.youtube.com/@icicemedya" class="social-link yt"><i class="fa-brands fa-youtube"></i></a>
+                                </div>
+                            </div>
+                            <div class="member-card">
+                                <div class="member-info"><h3>Esas Futbol</h3><p>Spor Kanalları</p></div>
+                                <div class="social-links">
+                                    <a href="https://www.youtube.com/@EsasFutbol" class="social-link yt"><i class="fa-brands fa-youtube"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="team-category">
-                        <h2 style="color:#0088cc; border-left:4px solid #0088cc; padding-left:15px; margin-bottom:20px;">Moderatörler</h2>
+                        <h2>Yapımcı</h2>
                         <div class="cards-wrapper">
                             <div class="member-card">
-                                <h3>Yiğit Ali</h3><p style="color:var(--text-dim); font-size:0.8rem;">Moderatör</p>
+                                <div class="member-info"><h3>Gökberk Uçar</h3><p>Yapımcı & Admin</p></div>
                                 <div class="social-links">
-                                    <a href="https://www.instagram.com/yigitalispn/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
-                                    <a href="https://www.instagram.com/yigitali.psd/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                    <a href="https://www.instagram.com/gokberk_ucr/" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="team-category">
+                        <h2>Moderatörler</h2>
+                        <div class="cards-wrapper">
+                            <div class="member-card">
+                                <div class="member-info"><h3>Yiğit Ali</h3><p>Moderatör</p></div>
+                                <div class="social-links">
+                                    <a href="https://www.instagram.com/yigitalispn/" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                    <a href="https://www.instagram.com/yigitali.psd/" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
                                 </div>
                             </div>
                             <div class="member-card">
-                                <h3>İlker</h3><p style="color:var(--text-dim); font-size:0.8rem;">Moderatör</p>
+                                <div class="member-info"><h3>İlker</h3><p>Moderatör</p></div>
                                 <div class="social-links">
-                                    <a href="https://www.instagram.com/ilkeryzx/" target="_blank" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                    <a href="https://www.instagram.com/ilkeryzx/" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="member-card">
+                                <div class="member-info"><h3>Hamza</h3><p>Moderatör</p></div>
+                                <div class="social-links">
+                                    <a href="https://www.instagram.com/hamzaabilge/" class="social-link insta"><i class="fa-brands fa-instagram"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -217,37 +333,52 @@
     </div>
 
     <script src="https://widget.rss.app/v1/wall.js" type="text/javascript" async></script>
+    
     <script>
         window.addEventListener('load', () => {
             setTimeout(() => {
-                document.getElementById('intro-overlay').classList.add('intro-hidden');
+                const intro = document.getElementById('intro-overlay');
+                intro.classList.add('intro-hidden');
                 lazyLoadWidget('gusholder');
             }, 2500);
         });
 
         const loadedWidgets = new Set();
+
         function lazyLoadWidget(sourceId) {
             const section = document.getElementById('feed-' + sourceId);
             if (!section) return;
             const widgetId = section.getAttribute('data-widget-id');
             const widgetBox = section.querySelector('.widget-box');
+
             if (widgetId && !loadedWidgets.has(widgetId)) {
                 widgetBox.innerHTML = `<rssapp-wall id="${widgetId}"></rssapp-wall>`;
                 loadedWidgets.add(widgetId);
-                if (window.RSSApp) window.RSSApp.init();
+                
+                if (window.RSSApp) {
+                    window.RSSApp.init();
+                }
             }
         }
 
         function showSource(sourceId, btn) {
             document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            document.querySelectorAll('.feed-section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById('feed-' + sourceId);
-            if (target) {
-                target.classList.add('active');
+            
+            document.querySelectorAll('.feed-section').forEach(s => {
+                s.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById('feed-' + sourceId);
+            if (targetSection) {
+                targetSection.classList.add('active');
                 lazyLoadWidget(sourceId);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 200);
+                requestAnimationFrame(() => {
+                    setTimeout(() => { 
+                        window.dispatchEvent(new Event('resize')); 
+                    }, 100);
+                });
             }
         }
     </script>
